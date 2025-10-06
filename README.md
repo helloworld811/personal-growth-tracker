@@ -44,7 +44,7 @@ git clone https://github.com/你的用户名/growth-dashboard.git
 cd growth-dashboard
 
 # 用浏览器打开
-open 成长仪表板生成器.html
+open dashboard.html
 ```
 
 ## 📈 数据管理
