@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成长仪表板生成器</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 30px 20px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #495057;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .module h2 {
+            color: #495057;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .rating-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .rating-btn:hover {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .rating-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .emotion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .emotion-btn {
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .emotion-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .emotion-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .dashboard-preview {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .data-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .reading-quotes {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .quote-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .quote-text {
+            font-style: italic;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .quote-reflection {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .export-section {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        /* 图片上传样式 */
+        .image-upload-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 2px dashed #667eea;
+        }
+
+        .image-upload-label {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .image-upload-label:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .image-upload-input {
+            display: none;
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .image-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-remove:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+
+        /* 手机端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 20px 15px;
+                display: flex;
+                overflow-x: auto;
+                gap: 10px;
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .nav-item {
+                min-width: 120px;
+                margin-bottom: 0;
+                text-align: center;
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+            
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+
+            .content-area {
+                padding: 20px 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .form-control {
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+
+            .rating-group {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .rating-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+
+            .emotion-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .emotion-btn {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+
+            .data-summary {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-card h3 {
+                font-size: 1em;
+            }
+
+            .summary-card .value {
+                font-size: 1.5em;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .export-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 5px;
+                display: block;
+                width: 100%;
+            }
+
+            .image-item {
+                width: 80px;
+                height: 80px;
+            }
+
+            .image-upload-label {
+                padding: 15px;
+                font-size: 14px;
+            }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .sidebar {
+                padding: 15px 10px;
+            }
+
+            .nav-item {
+                min-width: 100px;
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+
+            .content-area {
+                padding: 15px 10px;
+            }
+
+            .data-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .rating-group {
+                justify-content: center;
+            }
+
+            .emotion-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 成长仪表板生成器</h1>
+            <p>记录每一天的成长轨迹，让进步看得见</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <button class="nav-item active" onclick="showModule('plan')">📅 明日计划</button>
+                <button class="nav-item" onclick="showModule('exercise')">🏃‍♂️ 运动记录</button>
+                <button class="nav-item" onclick="showModule('study')">📚 学习内容</button>
+                <button class="nav-item" onclick="showModule('reading')">📖 阅读感悟</button>
+                <button class="nav-item" onclick="showModule('emotion')">😊 情绪状态</button>
+                <button class="nav-item" onclick="showModule('dashboard')">📊 数据面板</button>
+            </div>
+            
+            <div class="content-area">
+                <!-- 计划模块 -->
+                <div id="plan" class="module active">
+                    <h2>📅 明日计划</h2>
+                    <div class="form-group">
+                        <label>日期</label>
+                        <input type="date" id="planDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>主要目标 (1-3个)</label>
+                        <textarea id="mainGoals" class="form-control" placeholder="例如：完成项目报告、锻炼30分钟、阅读20页"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>具体安排</label>
+                        <textarea id="detailPlan" class="form-control" placeholder="详细的时间安排和具体任务"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>期望完成度</label>
+                        <div class="rating-group">
+                            <span>目标完成度：</span>
+                            <div id="planRating">
+                                <button class="rating-btn" onclick="setRating('plan', 1)">1</button>
+                                <button class="rating-btn" onclick="setRating('plan', 2)">2</button>
+                                <button class="rating-btn" onclick="setRating('plan', 3)">3</button>
+                                <button class="rating-btn" onclick="setRating('plan', 4)">4</button>
+                                <button class="rating-btn" onclick="setRating('plan', 5)">5</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 图片上传区域 -->
+                    <div class="image-upload-section">
+                        <label for="planning-image" class="image-upload-label">
+                            📷 点击上传相关图片
+                        </label>
+                        <input type="file" id="planning-image" class="image-upload-input" accept="image/*" multiple>
+                        <div id="planning-image-preview" class="image-preview"></div>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="savePlanData()">保存计划</button>
+                </div>
+
+                <!-- 运动模块 -->
+                <div id="exercise" class="module">
+                    <h2>🏃‍♂️ 运动记录</h2>
+                    <div class="form-group">
+                        <label>运动类型</label>
+                        <input type="text" id="exerciseType" class="form-control" placeholder="例如：跑步、瑜伽、健身房">
+                    </div>
+                    <div class="form-group">
+                        <label>运动时长 (分钟)</label>
+                        <input type="number" id="exerciseDuration" class="form-control" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label>运动强度</label>
+                        <div class="rating-group">
+                            <span>强度评分：</span>
+                            <div id="exerciseIntensity">
+                                <button class="rating-btn" onclick="setRating('exerciseIntensity', 1)">1</button>
+                                <button class="rating-btn" onclick="setRating('exerciseIntensity', 2)">2</button>
+                                <button class="rating-btn" onclick="setRating('exerciseIntensity', 3)">3</button>
+                                <button class="rating-btn" onclick="setRating('exerciseIntensity', 4)">4</button>
+                                <button class="rating-btn" onclick="setRating('exerciseIntensity', 5)">5</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>运动感受</label>
+                        <textarea id="exerciseFeeling" class="form-control" placeholder="运动后的感受和体验"></textarea>
+                    </div>
+
+                    <!-- 图片上传区域 -->
+                    <div class="image-upload-section">
+                        <label for="exercise-image" class="image-upload-label">
+                            📷 点击上传运动图片
+                        </label>
+                        <input type="file" id="exercise-image" class="image-upload-input" accept="image/*" multiple>
+                        <div id="exercise-image-preview" class="image-preview"></div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveExerciseData()">保存运动记录</button>
+                </div>
+
+                <!-- 学习模块 -->
+                <div id="study" class="module">
+                    <h2>📚 学习内容</h2>
+                    <div class="form-group">
+                        <label>学习主题</label>
+                        <input type="text" id="studyTopic" class="form-control" placeholder="例如：JavaScript、英语、设计">
+                    </div>
+                    <div class="form-group">
+                        <label>学习时长 (分钟)</label>
+                        <input type="number" id="studyDuration" class="form-control" placeholder="60">
+                    </div>
+                    <div class="form-group">
+                        <label>学习内容</label>
+                        <textarea id="studyContent" class="form-control" placeholder="今天学习的具体内容"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>掌握程度</label>
+                        <div class="rating-group">
+                            <span>掌握评分：</span>
+                            <div id="studyMastery">
+                                <button class="rating-btn" onclick="setRating('studyMastery', 1)">1</button>
+                                <button class="rating-btn" onclick="setRating('studyMastery', 2)">2</button>
+                                <button class="rating-btn" onclick="setRating('studyMastery', 3)">3</button>
+                                <button class="rating-btn" onclick="setRating('studyMastery', 4)">4</button>
+                                <button class="rating-btn" onclick="setRating('studyMastery', 5)">5</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>学习收获</label>
+                        <textarea id="studyGains" class="form-control" placeholder="今天的学习收获和心得"></textarea>
+                    </div>
+
+                    <!-- 图片上传区域 -->
+                    <div class="image-upload-section">
+                        <label for="study-image" class="image-upload-label">
+                            📷 点击上传学习图片
+                        </label>
+                        <input type="file" id="study-image" class="image-upload-input" accept="image/*" multiple>
+                        <div id="study-image-preview" class="image-preview"></div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveStudyData()">保存学习记录</button>
+                </div>
+
+                <!-- 阅读模块 -->
+                <div id="reading" class="module">
+                    <h2>📖 阅读感悟</h2>
+                    <div class="form-group">
+                        <label>书籍/文章名称</label>
+                        <input type="text" id="readingTitle" class="form-control" placeholder="今天阅读的书籍或文章">
+                    </div>
+                    <div class="form-group">
+                        <label>阅读页数/时长</label>
+                        <input type="text" id="readingProgress" class="form-control" placeholder="例如：20页 或 30分钟">
+                    </div>
+                    <div class="form-group">
+                        <label>摘录句子</label>
+                        <textarea id="readingQuotes" class="form-control" placeholder="摘录印象深刻的句子或段落"></textarea>
+                        <button type="button" class="btn-primary" onclick="addQuote()">添加摘录</button>
+                    </div>
+                    <div id="quotesContainer" class="reading-quotes"></div>
+                    <div class="form-group">
+                        <label>阅读感悟</label>
+                        <textarea id="readingReflection" class="form-control" placeholder="今天阅读的感悟和思考"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>推荐指数</label>
+                        <div class="rating-group">
+                            <span>推荐评分：</span>
+                            <div id="readingRating">
+                                <button class="rating-btn" onclick="setRating('readingRating', 1)">1</button>
+                                <button class="rating-btn" onclick="setRating('readingRating', 2)">2</button>
+                                <button class="rating-btn" onclick="setRating('readingRating', 3)">3</button>
+                                <button class="rating-btn" onclick="setRating('readingRating', 4)">4</button>
+                                <button class="rating-btn" onclick="setRating('readingRating', 5)">5</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 图片上传区域 -->
+                    <div class="image-upload-section">
+                        <label for="reading-image" class="image-upload-label">
+                            📷 点击上传阅读图片
+                        </label>
+                        <input type="file" id="reading-image" class="image-upload-input" accept="image/*" multiple>
+                        <div id="reading-image-preview" class="image-preview"></div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveReadingData()">保存阅读记录</button>
+                </div>
+
+                <!-- 情绪模块 -->
+                <div id="emotion" class="module">
+                    <h2>😊 情绪状态</h2>
+                    <div class="form-group">
+                        <label>整体情绪</label>
+                        <div class="emotion-grid">
+                            <button class="emotion-btn" onclick="selectEmotion('开心')">😊 开心</button>
+                            <button class="emotion-btn" onclick="selectEmotion('平静')">😌 平静</button>
+                            <button class="emotion-btn" onclick="selectEmotion('兴奋')">🤩 兴奋</button>
+                            <button class="emotion-btn" onclick="selectEmotion('焦虑')">😰 焦虑</button>
+                            <button class="emotion-btn" onclick="selectEmotion('疲惫')">😴 疲惫</button>
+                            <button class="emotion-btn" onclick="selectEmotion('沮丧')">😔 沮丧</button>
+                            <button class="emotion-btn" onclick="selectEmotion('愤怒')">😠 愤怒</button>
+                            <button class="emotion-btn" onclick="selectEmotion('满足')">😌 满足</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>情绪强度</label>
+                        <div class="rating-group">
+                            <span>强度评分：</span>
+                            <div id="emotionIntensity">
+                                <button class="rating-btn" onclick="setRating('emotionIntensity', 1)">1</button>
+                                <button class="rating-btn" onclick="setRating('emotionIntensity', 2)">2</button>
+                                <button class="rating-btn" onclick="setRating('emotionIntensity', 3)">3</button>
+                                <button class="rating-btn" onclick="setRating('emotionIntensity', 4)">4</button>
+                                <button class="rating-btn" onclick="setRating('emotionIntensity', 5)">5</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>情绪触发事件</label>
+                        <textarea id="emotionTrigger" class="form-control" placeholder="是什么事情影响了你的情绪？"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>情绪调节方法</label>
+                        <textarea id="emotionRegulation" class="form-control" placeholder="你是如何调节情绪的？"></textarea>
+                    </div>
+
+                    <!-- 图片上传区域 -->
+                    <div class="image-upload-section">
+                        <label for="emotion-image" class="image-upload-label">
+                            📷 点击上传情绪图片
+                        </label>
+                        <input type="file" id="emotion-image" class="image-upload-input" accept="image/*" multiple>
+                        <div id="emotion-image-preview" class="image-preview"></div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveEmotionData()">保存情绪记录</button>
+                </div>
+
+                <!-- 数据面板 -->
+                <div id="dashboard" class="module">
+                    <h2>📊 成长数据面板</h2>
+                    <div class="data-summary">
+                        <div class="summary-card">
+                            <h3>总记录天数</h3>
+                            <div class="value" id="totalDays">0</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>平均运动时长</h3>
+                            <div class="value" id="avgExercise">0分钟</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>平均学习时长</h3>
+                            <div class="value" id="avgStudy">0分钟</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>情绪平均分</h3>
+                            <div class="value" id="avgEmotion">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                    
+                    <div class="export-section">
+                        <h3>导出数据</h3>
+                        <p>将你的成长数据导出为图片或数据文件</p>
+                        <button class="export-btn" onclick="exportAsImage()">📸 导出为图片</button>
+                        <button class="export-btn" onclick="exportAsData()">📄 导出数据</button>
+                        <button class="export-btn" onclick="generateQRCode()">📱 生成二维码</button>
+                        <button class="export-btn" onclick="clearAllData()">🗑️ 清空数据</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局数据存储
+        let growthData = JSON.parse(localStorage.getItem('growthData')) || {
+            plans: [],
+            exercises: [],
+            studies: [],
+            readings: [],
+            emotions: []
+        };
+
+        // 图片存储
+        let imageData = JSON.parse(localStorage.getItem('imageData')) || {
+            planning: {},
+            exercise: {},
+            study: {},
+            reading: {},
+            emotion: {}
+        };
+
+        let currentRatings = {};
+        let currentEmotion = '';
+        let quotes = [];
+
+        // 图片上传处理函数
+        function setupImageUpload() {
+            const modules = ['planning', 'exercise', 'study', 'reading', 'emotion'];
+            
+            modules.forEach(module => {
+                const input = document.getElementById(`${module}-image`);
+                const preview = document.getElementById(`${module}-image-preview`);
+                
+                if (input && preview) {
+                    input.addEventListener('change', function(e) {
+                        handleImageUpload(e, module, preview);
+                    });
+                    
+                    // 显示已存储的图片
+                    displayStoredImages(module, preview);
+                }
+            });
+        }
+
+        function handleImageUpload(event, module, previewContainer) {
+            const files = event.target.files;
+            
+            for (let file of files) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                        const imageUrl = e.target.result;
+                        
+                        // 存储图片数据
+                        if (!imageData[module]) {
+                            imageData[module] = {};
+                        }
+                        imageData[module][imageId] = {
+                            url: imageUrl,
+                            name: file.name,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        // 保存到localStorage
+                        localStorage.setItem('imageData', JSON.stringify(imageData));
+                        
+                        // 显示图片
+                        displayImage(imageId, imageUrl, file.name, module, previewContainer);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            // 清空input
+            event.target.value = '';
+        }
+
+        function displayImage(imageId, imageUrl, imageName, module, container) {
+            const imageItem = document.createElement('div');
+            imageItem.className = 'image-item';
+            imageItem.innerHTML = `
+                <img src="${imageUrl}" alt="${imageName}" title="${imageName}">
+                <button class="image-remove" onclick="removeImage('${imageId}', '${module}', this)">×</button>
+            `;
+            container.appendChild(imageItem);
+        }
+
+        function displayStoredImages(module, container) {
+            container.innerHTML = '';
+            if (imageData[module]) {
+                Object.entries(imageData[module]).forEach(([imageId, data]) => {
+                    displayImage(imageId, data.url, data.name, module, container);
+                });
+            }
+        }
+
+        function removeImage(imageId, module, button) {
+            // 从数据中删除
+            if (imageData[module] && imageData[module][imageId]) {
+                delete imageData[module][imageId];
+                localStorage.setItem('imageData', JSON.stringify(imageData));
+            }
+            
+            // 从DOM中删除
+            button.parentElement.remove();
+        }
+
+        // 获取模块的图片数据
+        function getModuleImages(module) {
+            return imageData[module] || {};
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置默认日期为明天
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('planDate').value = tomorrow.toISOString().split('T')[0];
+            
+            // 初始化图片上传功能
+            setupImageUpload();
+            
+            updateDashboard();
+        });
+
+        // 显示模块
+        function showModule(moduleId) {
+            // 隐藏所有模块
+            document.querySelectorAll('.module').forEach(module => {
+                module.classList.remove('active');
+            });
+            
+            // 移除所有导航项的active状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示选中的模块
+            document.getElementById(moduleId).classList.add('active');
+            
+            // 设置对应导航项为active
+            event.target.classList.add('active');
+            
+            // 如果是数据面板，更新图表
+            if (moduleId === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // 设置评分
+        function setRating(type, rating) {
+            currentRatings[type] = rating;
+            
+            // 更新UI
+            const ratingContainer = document.getElementById(type);
+            if (ratingContainer) {
+                const buttons = ratingContainer.querySelectorAll('.rating-btn');
+                buttons.forEach((btn, index) => {
+                    if (index < rating) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // 选择情绪
+        function selectEmotion(emotion) {
+            currentEmotion = emotion;
+            
+            // 更新UI
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+        }
+
+        // 添加摘录
+        function addQuote() {
+            const quoteText = document.getElementById('readingQuotes').value.trim();
+            if (quoteText) {
+                quotes.push({
+                    text: quoteText,
+                    date: new Date().toLocaleDateString()
+                });
+                
+                updateQuotesDisplay();
+                document.getElementById('readingQuotes').value = '';
+            }
+        }
+
+        // 更新摘录显示
+        function updateQuotesDisplay() {
+            const container = document.getElementById('quotesContainer');
+            container.innerHTML = quotes.map(quote => `
+                <div class="quote-item">
+                    <div class="quote-text">"${quote.text}"</div>
+                    <div class="quote-reflection">摘录于 ${quote.date}</div>
+                </div>
+            `).join('');
+        }
+
+        // 保存计划数据
+        function savePlanData() {
+            const planData = {
+                date: document.getElementById('planDate').value,
+                mainGoals: document.getElementById('mainGoals').value,
+                detailPlan: document.getElementById('detailPlan').value,
+                expectedCompletion: currentRatings.plan || 0,
+                images: getModuleImages('planning'),
+                timestamp: new Date().toISOString()
+            };
+            
+            growthData.plans.push(planData);
+            saveToLocalStorage();
+            alert('计划已保存！');
+            clearPlanForm();
+        }
+
+        // 保存运动数据
+        function saveExerciseData() {
+            const exerciseData = {
+                type: document.getElementById('exerciseType').value,
+                duration: parseInt(document.getElementById('exerciseDuration').value) || 0,
+                intensity: currentRatings.exerciseIntensity || 0,
+                feeling: document.getElementById('exerciseFeeling').value,
+                images: getModuleImages('exercise'),
+                date: new Date().toLocaleDateString(),
+                timestamp: new Date().toISOString()
+            };
+            
+            growthData.exercises.push(exerciseData);
+            saveToLocalStorage();
+            alert('运动记录已保存！');
+            clearExerciseForm();
+        }
+
+        // 保存学习数据
+        function saveStudyData() {
+            const studyData = {
+                topic: document.getElementById('studyTopic').value,
+                duration: parseInt(document.getElementById('studyDuration').value) || 0,
+                content: document.getElementById('studyContent').value,
+                mastery: currentRatings.studyMastery || 0,
+                gains: document.getElementById('studyGains').value,
+                images: getModuleImages('study'),
+                date: new Date().toLocaleDateString(),
+                timestamp: new Date().toISOString()
+            };
+            
+            growthData.studies.push(studyData);
+            saveToLocalStorage();
+            alert('学习记录已保存！');
+            clearStudyForm();
+        }
+
+        // 保存阅读数据
+        function saveReadingData() {
+            const readingData = {
+                title: document.getElementById('readingTitle').value,
+                progress: document.getElementById('readingProgress').value,
+                quotes: [...quotes],
+                reflection: document.getElementById('readingReflection').value,
+                rating: currentRatings.readingRating || 0,
+                images: getModuleImages('reading'),
+                date: new Date().toLocaleDateString(),
+                timestamp: new Date().toISOString()
+            };
+            
+            growthData.readings.push(readingData);
+            saveToLocalStorage();
+            alert('阅读记录已保存！');
+            clearReadingForm();
+        }
+
+        // 保存情绪数据
+        function saveEmotionData() {
+            const emotionData = {
+                emotion: currentEmotion,
+                intensity: currentRatings.emotionIntensity || 0,
+                trigger: document.getElementById('emotionTrigger').value,
+                regulation: document.getElementById('emotionRegulation').value,
+                images: getModuleImages('emotion'),
+                date: new Date().toLocaleDateString(),
+                timestamp: new Date().toISOString()
+            };
+            
+            growthData.emotions.push(emotionData);
+            saveToLocalStorage();
+            alert('情绪记录已保存！');
+            clearEmotionForm();
+        }
+
+        // 清空表单
+        function clearPlanForm() {
+            document.getElementById('mainGoals').value = '';
+            document.getElementById('detailPlan').value = '';
+            currentRatings.plan = 0;
+            document.querySelectorAll('#planRating .rating-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function clearExerciseForm() {
+            document.getElementById('exerciseType').value = '';
+            document.getElementById('exerciseDuration').value = '';
+            document.getElementById('exerciseFeeling').value = '';
+            currentRatings.exerciseIntensity = 0;
+            document.querySelectorAll('#exerciseIntensity .rating-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function clearStudyForm() {
+            document.getElementById('studyTopic').value = '';
+            document.getElementById('studyDuration').value = '';
+            document.getElementById('studyContent').value = '';
+            document.getElementById('studyGains').value = '';
+            currentRatings.studyMastery = 0;
+            document.querySelectorAll('#studyMastery .rating-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function clearReadingForm() {
+            document.getElementById('readingTitle').value = '';
+            document.getElementById('readingProgress').value = '';
+            document.getElementById('readingQuotes').value = '';
+            document.getElementById('readingReflection').value = '';
+            quotes = [];
+            updateQuotesDisplay();
+            currentRatings.readingRating = 0;
+            document.querySelectorAll('#readingRating .rating-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function clearEmotionForm() {
+            document.getElementById('emotionTrigger').value = '';
+            document.getElementById('emotionRegulation').value = '';
+            currentEmotion = '';
+            currentRatings.emotionIntensity = 0;
+            document.querySelectorAll('.emotion-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#emotionIntensity .rating-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        // 保存到本地存储
+        function saveToLocalStorage() {
+            localStorage.setItem('growthData', JSON.stringify(growthData));
+        }
+
+        // 更新数据面板
+        function updateDashboard() {
+            // 计算统计数据
+            const totalDays = new Set([
+                ...growthData.exercises.map(e => e.date),
+                ...growthData.studies.map(s => s.date),
+                ...growthData.emotions.map(em => em.date)
+            ]).size;
+
+            const avgExercise = growthData.exercises.length > 0 
+                ? Math.round(growthData.exercises.reduce((sum, e) => sum + e.duration, 0) / growthData.exercises.length)
+                : 0;
+
+            const avgStudy = growthData.studies.length > 0
+                ? Math.round(growthData.studies.reduce((sum, s) => sum + s.duration, 0) / growthData.studies.length)
+                : 0;
+
+            const avgEmotion = growthData.emotions.length > 0
+                ? (growthData.emotions.reduce((sum, e) => sum + e.intensity, 0) / growthData.emotions.length).toFixed(1)
+                : 0;
+
+            // 更新显示
+            document.getElementById('totalDays').textContent = totalDays;
+            document.getElementById('avgExercise').textContent = avgExercise + '分钟';
+            document.getElementById('avgStudy').textContent = avgStudy + '分钟';
+            document.getElementById('avgEmotion').textContent = avgEmotion;
+
+            // 更新图表
+            updateChart();
+        }
+
+        // 更新图表
+        function updateChart() {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            
+            // 获取最近7天的数据
+            const last7Days = [];
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                last7Days.push(date.toLocaleDateString());
+            }
+
+            const exerciseData = last7Days.map(date => {
+                const dayExercise = growthData.exercises.filter(e => e.date === date);
+                return dayExercise.reduce((sum, e) => sum + e.duration, 0);
+            });
+
+            const studyData = last7Days.map(date => {
+                const dayStudy = growthData.studies.filter(s => s.date === date);
+                return dayStudy.reduce((sum, s) => sum + s.duration, 0);
+            });
+
+            const emotionData = last7Days.map(date => {
+                const dayEmotion = growthData.emotions.filter(e => e.date === date);
+                return dayEmotion.length > 0 ? dayEmotion[0].intensity : 0;
+            });
+
+            // 销毁现有图表
+            if (window.growthChart && typeof window.growthChart.destroy === 'function') {
+                window.growthChart.destroy();
+            }
+
+            // 创建新图表
+            window.growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last7Days.map(date => {
+                        const d = new Date(date);
+                        return (d.getMonth() + 1) + '/' + d.getDate();
+                    }),
+                    datasets: [{
+                        label: '运动时长(分钟)',
+                        data: exerciseData,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: '学习时长(分钟)',
+                        data: studyData,
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: '情绪评分',
+                        data: emotionData.map(score => score * 20), // 放大显示
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '时长(分钟)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: '情绪评分'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '最近7天成长趋势'
+                        }
+                    }
+                }
+            });
+        }
+
+        // 导出为图片
+        async function exportAsImage() {
+            const dashboard = document.getElementById('dashboard');
+            
+            // 创建包含图片的完整导出内容
+            const exportContent = document.createElement('div');
+            exportContent.style.cssText = `
+                background: white;
+                padding: 30px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+            `;
+            
+            // 添加标题
+            const title = document.createElement('h1');
+            title.textContent = '个人成长仪表板';
+            title.style.cssText = `
+                text-align: center;
+                color: #333;
+                margin-bottom: 30px;
+                font-size: 28px;
+            `;
+            exportContent.appendChild(title);
+            
+            // 添加日期
+            const dateDiv = document.createElement('div');
+            dateDiv.textContent = `生成时间: ${new Date().toLocaleString()}`;
+            dateDiv.style.cssText = `
+                text-align: center;
+                color: #666;
+                margin-bottom: 30px;
+                font-size: 14px;
+            `;
+            exportContent.appendChild(dateDiv);
+            
+            // 克隆仪表板内容
+            const dashboardClone = dashboard.cloneNode(true);
+            exportContent.appendChild(dashboardClone);
+            
+            // 添加各模块的图片
+            const modules = ['planning', 'exercise', 'study', 'reading', 'emotion'];
+            const moduleNames = {
+                planning: '计划模块',
+                exercise: '运动模块', 
+                study: '学习模块',
+                reading: '阅读模块',
+                emotion: '情绪模块'
+            };
+            
+            for (const module of modules) {
+                const moduleImages = getModuleImages(module);
+                if (Object.keys(moduleImages).length > 0) {
+                    const moduleSection = document.createElement('div');
+                    moduleSection.style.cssText = `
+                        margin-top: 30px;
+                        padding: 20px;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 10px;
+                    `;
+                    
+                    const moduleTitle = document.createElement('h3');
+                    moduleTitle.textContent = moduleNames[module] + ' - 相关图片';
+                    moduleTitle.style.cssText = `
+                        color: #333;
+                        margin-bottom: 15px;
+                        font-size: 18px;
+                    `;
+                    moduleSection.appendChild(moduleTitle);
+                    
+                    const imageGrid = document.createElement('div');
+                    imageGrid.style.cssText = `
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                        gap: 15px;
+                    `;
+                    
+                    Object.values(moduleImages).forEach(imageData => {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.style.cssText = `
+                            text-align: center;
+                        `;
+                        
+                        const img = document.createElement('img');
+                        img.src = imageData.url;
+                        img.style.cssText = `
+                            max-width: 100%;
+                            height: 150px;
+                            object-fit: cover;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        `;
+                        
+                        const imgName = document.createElement('div');
+                        imgName.textContent = imageData.name;
+                        imgName.style.cssText = `
+                            font-size: 12px;
+                            color: #666;
+                            margin-top: 5px;
+                        `;
+                        
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(imgName);
+                        imageGrid.appendChild(imgContainer);
+                    });
+                    
+                    moduleSection.appendChild(imageGrid);
+                    exportContent.appendChild(moduleSection);
+                }
+            }
+            
+            // 临时添加到页面进行截图
+            document.body.appendChild(exportContent);
+            
+            try {
+                const canvas = await html2canvas(exportContent, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                // 下载图片
+                const link = document.createElement('a');
+                link.download = `成长仪表板_${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+                
+                alert('成长仪表板已导出为图片！');
+            } catch (error) {
+                console.error('导出失败:', error);
+                alert('导出失败，请重试！');
+            } finally {
+                // 移除临时元素
+                document.body.removeChild(exportContent);
+            }
+        }
+
+        // 导出数据
+        function exportAsData() {
+            const exportObj = {
+                growthData: growthData,
+                imageData: imageData,
+                quotes: quotes,
+                exportDate: new Date().toISOString(),
+                version: '2.0'
+            };
+            
+            const dataStr = JSON.stringify(exportObj, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `成长数据_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            alert('数据已导出为JSON文件！');
+        }
+
+        // 清空所有数据
+        function clearAllData() {
+            if (confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+                growthData = {
+                    plans: [],
+                    exercises: [],
+                    studies: [],
+                    readings: [],
+                    emotions: []
+                };
+                localStorage.removeItem('growthData');
+                updateDashboard();
+                alert('所有数据已清空！');
+            }
+        }
+
+        // 生成二维码功能
+        function generateQRCode() {
+            const currentUrl = window.location.href;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentUrl)}`;
+            
+            // 创建模态框显示二维码
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 15px;
+                text-align: center;
+                max-width: 400px;
+                width: 90%;
+            `;
+            
+            content.innerHTML = `
+                <h3 style="margin-top: 0; color: #333;">📱 扫码分享</h3>
+                <p style="color: #666; margin-bottom: 20px;">扫描二维码在手机上使用</p>
+                <img src="${qrApiUrl}" style="width: 250px; height: 250px; border: 2px solid #ddd; border-radius: 10px;" alt="二维码">
+                <div style="margin-top: 20px;">
+                    <button onclick="downloadQR('${qrApiUrl}')" style="
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        margin: 5px;
+                        font-size: 14px;
+                    ">💾 下载二维码</button>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                        background: #f0f0f0;
+                        color: #333;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        margin: 5px;
+                        font-size: 14px;
+                    ">关闭</button>
+                </div>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // 点击背景关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // 下载二维码
+        function downloadQR(qrUrl) {
+            const link = document.createElement('a');
+            link.href = qrUrl;
+            link.download = '成长仪表板二维码.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
