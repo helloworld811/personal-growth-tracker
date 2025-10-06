@@ -86,7 +86,7 @@
         <h1>🌟 个人成长仪表板</h1>
         <p class="subtitle">让成长可视化，让进步看得见</p>
         
-        <a href="成长仪表板生成器.html" class="btn">🚀 立即开始使用</a>
+        <a href="dashboard.html" class="btn">🚀 立即开始使用</a>
         
         <div class="features">
             <div class="feature">五大成长模块全覆盖</div>
@@ -111,7 +111,7 @@
     <script>
         // 生成当前页面的二维码
         function generateQR() {
-            const currentUrl = window.location.href.replace('index.html', '成长仪表板生成器.html');
+            const currentUrl = window.location.href.replace('index.html', 'dashboard.html');
             const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentUrl)}`;
             
             const qrImg = document.createElement('img');
