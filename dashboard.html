@@ -3162,17 +3162,23 @@
 
         // 导出为图片
         async function exportAsImage() {
-            const dashboard = document.getElementById('dashboard');
-            
-            // 创建包含图片的完整导出内容
-            const exportContent = document.createElement('div');
-            exportContent.style.cssText = `
-                background: white;
-                padding: 30px;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                max-width: 800px;
-                margin: 0 auto;
-            `;
+            try {
+                console.log('开始导出图片...');
+                alert('正在生成图片，请稍候...');
+                
+                const dashboard = document.getElementById('dashboard');
+                console.log('Dashboard元素:', dashboard);
+                
+                // 创建包含图片的完整导出内容
+                const exportContent = document.createElement('div');
+                exportContent.style.cssText = `
+                    background: white;
+                    padding: 40px; /* 增加内边距 */
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    max-width: 1000px; /* 增加最大宽度 */
+                    margin: 0 auto;
+                    box-sizing: border-box;
+                `;
             
             // 添加标题
             const title = document.createElement('h1');
@@ -3181,7 +3187,8 @@
                 text-align: center;
                 color: #333;
                 margin-bottom: 30px;
-                font-size: 28px;
+                font-size: 32px; /* 增加标题字体大小 */
+                font-weight: bold;
             `;
             exportContent.appendChild(title);
             
@@ -3192,7 +3199,8 @@
                 text-align: center;
                 color: #666;
                 margin-bottom: 30px;
-                font-size: 14px;
+                font-size: 16px; /* 增加日期字体大小 */
+                font-weight: 500;
             `;
             exportContent.appendChild(dateDiv);
             
@@ -3212,6 +3220,9 @@
             
             for (const module of modules) {
                 const moduleImages = getModuleImages(module);
+                console.log(`${module} 模块图片数据:`, moduleImages);
+                console.log(`${module} 模块图片数量:`, Object.keys(moduleImages).length);
+                
                 if (Object.keys(moduleImages).length > 0) {
                     const moduleSection = document.createElement('div');
                     moduleSection.style.cssText = `
@@ -3226,15 +3237,17 @@
                     moduleTitle.style.cssText = `
                         color: #333;
                         margin-bottom: 15px;
-                        font-size: 18px;
+                        font-size: 20px; /* 增加模块标题字体大小 */
+                        font-weight: bold;
                     `;
                     moduleSection.appendChild(moduleTitle);
                     
                     const imageGrid = document.createElement('div');
                     imageGrid.style.cssText = `
                         display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                        gap: 15px;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 进一步增加最小宽度 */
+                        gap: 25px; /* 增加间距 */
+                        margin-top: 20px;
                     `;
                     
                     Object.values(moduleImages).forEach(imageData => {
@@ -3247,18 +3260,21 @@
                         img.src = imageData.url;
                         img.style.cssText = `
                             max-width: 100%;
-                            height: 150px;
+                            height: 250px; /* 进一步增加图片高度 */
                             object-fit: cover;
                             border-radius: 8px;
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 增强阴影效果 */
                         `;
+                        // 确保图片加载
+                        img.crossOrigin = 'anonymous';
                         
                         const imgName = document.createElement('div');
                         imgName.textContent = imageData.name;
                         imgName.style.cssText = `
-                            font-size: 12px;
-                            color: #666;
-                            margin-top: 5px;
+                            font-size: 14px; /* 增加字体大小 */
+                            color: #333; /* 加深颜色 */
+                            margin-top: 8px;
+                            font-weight: 500; /* 增加字体粗细 */
                         `;
                         
                         imgContainer.appendChild(img);
@@ -3274,31 +3290,59 @@
             // 临时添加到页面进行截图
             document.body.appendChild(exportContent);
             
-            try {
-                const canvas = await html2canvas(exportContent, {
-                    backgroundColor: '#ffffff',
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: false,
-                    foreignObjectRendering: false,
-                    logging: false,
-                    width: exportContent.scrollWidth,
-                    height: exportContent.scrollHeight
+            // 等待所有图片加载完成
+            const images = exportContent.querySelectorAll('img');
+            await Promise.all(Array.from(images).map(img => {
+                return new Promise((resolve) => {
+                    if (img.complete) {
+                        resolve();
+                    } else {
+                        img.onload = resolve;
+                        img.onerror = resolve;
+                    }
                 });
-                
-                // 下载图片
-                const link = document.createElement('a');
-                link.download = `成长仪表板_${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-                
-                alert('成长仪表板已导出为图片！');
+            }));
+
+            console.log('开始使用html2canvas生成图片...');
+            console.log('导出内容尺寸:', exportContent.scrollWidth, 'x', exportContent.scrollHeight);
+            
+            const canvas = await html2canvas(exportContent, {
+                backgroundColor: '#ffffff',
+                scale: 4, // 进一步提高分辨率
+                useCORS: true,
+                allowTaint: false,
+                foreignObjectRendering: false,
+                logging: true, // 开启日志查看问题
+                width: exportContent.scrollWidth,
+                height: exportContent.scrollHeight,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: exportContent.scrollWidth,
+                windowHeight: exportContent.scrollHeight,
+                imageTimeout: 15000, // 增加图片加载超时时间
+                removeContainer: false
+            });
+            
+            console.log('Canvas生成成功，尺寸:', canvas.width, 'x', canvas.height);
+            
+            // 下载图片 - 使用更高质量的JPEG格式
+            const link = document.createElement('a');
+            link.download = `成长仪表板_${new Date().toLocaleDateString().replace(/\//g, '-')}.png`;
+            // 使用最高质量导出
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+            
+            console.log('图片导出完成');
+            alert('成长仪表板已导出为图片！');
             } catch (error) {
-                console.error('导出失败:', error);
-                alert('导出失败，请重试！');
+                console.error('导出失败，详细错误信息:', error);
+                console.error('错误堆栈:', error.stack);
+                alert(`导出失败: ${error.message}，请查看控制台获取详细信息！`);
             } finally {
                 // 移除临时元素
-                document.body.removeChild(exportContent);
+                if (exportContent && exportContent.parentNode) {
+                    document.body.removeChild(exportContent);
+                }
             }
         }
 
@@ -3947,13 +3991,15 @@
             // 使用html2canvas导出模块为图片
             html2canvas(moduleElement, {
                 backgroundColor: '#ffffff',
-                scale: 2,
+                scale: 3, // 提高分辨率
                 useCORS: true,
                 allowTaint: false,
                 foreignObjectRendering: false,
                 logging: false,
                 width: moduleElement.scrollWidth,
-                height: moduleElement.scrollHeight
+                height: moduleElement.scrollHeight,
+                dpi: 300, // 设置DPI为300
+                pixelRatio: 3 // 提高像素比
             }).then(canvas => {
                 const link = document.createElement('a');
                 const dateStr = new Date().toLocaleDateString().replace(/\//g, '-');
@@ -4114,11 +4160,16 @@
             updatePopularTags();
 
             modal.style.display = 'block';
+            modal.classList.add('show');
             console.log('Modal should be visible now'); // 调试日志
         }
 
         function closeImageModal() {
-            document.getElementById('imageModal').style.display = 'none';
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300); // 等待动画完成
             // 清空当前标签
             currentImageTags = [];
         }
