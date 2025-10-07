@@ -17,16 +17,18 @@
             font-family: 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            margin: 0;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 0;
+            box-shadow: none;
             overflow: hidden;
+            min-height: 100vh;
         }
 
         .header {
@@ -113,19 +115,21 @@
 
         .main-content {
             display: flex;
-            min-height: 600px;
+            min-height: calc(100vh - 140px);
         }
 
         .sidebar {
-            width: 300px;
+            width: 280px;
             background: #f8f9fa;
-            padding: 30px 20px;
+            padding: 25px 15px;
             border-right: 1px solid #e9ecef;
+            flex-shrink: 0;
         }
 
         .content-area {
             flex: 1;
-            padding: 30px;
+            padding: 25px;
+            overflow-x: auto;
         }
 
         .nav-item {
@@ -831,6 +835,24 @@
 
         /* 手机端优化 */
         @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                display: flex;
+                overflow-x: auto;
+                gap: 10px;
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
             .today-records-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
@@ -849,24 +871,8 @@
                 padding: 6px 8px;
             }
         }
-            body {
-                padding: 10px;
-            }
 
-            .main-content {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                padding: 20px 15px;
-                display: flex;
-                overflow-x: auto;
-                gap: 10px;
-                border-right: none;
-                border-bottom: 1px solid #e9ecef;
-            }
-
+        @media (max-width: 768px) {
             .nav-item {
                 min-width: 120px;
                 margin-bottom: 0;
@@ -877,7 +883,7 @@
             
             .container {
                 margin: 0;
-                border-radius: 15px;
+                border-radius: 0;
             }
 
             .content-area {
