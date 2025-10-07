@@ -1756,6 +1756,275 @@
                  grid-template-columns: repeat(2, 1fr);
              }
          }
+
+         /* ==================== 年度总结样式 ==================== */
+         .annual-summary-report {
+             max-width: 800px;
+             margin: 0 auto;
+             padding: 20px;
+             background: white;
+             border-radius: 15px;
+             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+         }
+
+         .summary-header {
+             text-align: center;
+             margin-bottom: 40px;
+             padding: 30px 20px;
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+             border-radius: 15px;
+             color: white;
+         }
+
+         .summary-header h3 {
+             font-size: 28px;
+             margin-bottom: 10px;
+             font-weight: bold;
+         }
+
+         .summary-subtitle {
+             font-size: 16px;
+             opacity: 0.9;
+             margin: 0;
+         }
+
+         .summary-section {
+             margin-bottom: 40px;
+             padding: 25px;
+             background: #f8f9ff;
+             border-radius: 12px;
+             border-left: 4px solid #667eea;
+         }
+
+         .summary-section h4 {
+             color: #333;
+             margin-bottom: 20px;
+             font-size: 20px;
+             display: flex;
+             align-items: center;
+             gap: 8px;
+         }
+
+         .keywords-cloud {
+             display: flex;
+             flex-wrap: wrap;
+             gap: 12px;
+             margin-bottom: 15px;
+         }
+
+         .keyword-tag {
+             background: linear-gradient(135deg, #667eea, #764ba2);
+             color: white;
+             padding: 8px 16px;
+             border-radius: 20px;
+             font-weight: bold;
+             transition: all 0.3s ease;
+             cursor: pointer;
+         }
+
+         .keyword-tag:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+         }
+
+         .keywords-insight {
+             color: #666;
+             font-style: italic;
+             margin: 0;
+         }
+
+         .stats-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+             gap: 20px;
+         }
+
+         .stat-card {
+             background: white;
+             padding: 20px;
+             border-radius: 12px;
+             text-align: center;
+             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+             transition: all 0.3s ease;
+         }
+
+         .stat-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+         }
+
+         .stat-number {
+             font-size: 32px;
+             font-weight: bold;
+             color: #667eea;
+             margin-bottom: 8px;
+         }
+
+         .stat-label {
+             color: #666;
+             font-size: 14px;
+         }
+
+         .growth-timeline {
+             position: relative;
+         }
+
+         .milestone {
+             display: flex;
+             align-items: flex-start;
+             margin-bottom: 25px;
+             position: relative;
+         }
+
+         .milestone:not(:last-child)::after {
+             content: '';
+             position: absolute;
+             left: 30px;
+             top: 60px;
+             width: 2px;
+             height: 40px;
+             background: #e9ecef;
+         }
+
+         .milestone-date {
+             background: #667eea;
+             color: white;
+             padding: 8px 12px;
+             border-radius: 20px;
+             font-size: 14px;
+             font-weight: bold;
+             min-width: 60px;
+             text-align: center;
+             margin-right: 20px;
+         }
+
+         .milestone-content {
+             flex: 1;
+             background: white;
+             padding: 15px 20px;
+             border-radius: 10px;
+             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+         }
+
+         .milestone-content h5 {
+             color: #333;
+             margin-bottom: 8px;
+             font-size: 16px;
+         }
+
+         .milestone-content p {
+             color: #666;
+             margin: 0;
+             font-size: 14px;
+         }
+
+         .achievements-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+             gap: 20px;
+         }
+
+         .achievement-card {
+             background: white;
+             padding: 20px;
+             border-radius: 12px;
+             text-align: center;
+             transition: all 0.3s ease;
+             border: 2px solid #e9ecef;
+         }
+
+         .achievement-card.unlocked {
+             border-color: #28a745;
+             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+             color: white;
+             transform: scale(1.02);
+         }
+
+         .achievement-card.locked {
+             opacity: 0.6;
+             filter: grayscale(50%);
+         }
+
+         .achievement-icon {
+             font-size: 40px;
+             margin-bottom: 10px;
+         }
+
+         .achievement-title {
+             font-weight: bold;
+             margin-bottom: 8px;
+             font-size: 16px;
+         }
+
+         .achievement-desc {
+             font-size: 12px;
+             opacity: 0.9;
+         }
+
+         .annual-message {
+             background: white;
+             padding: 25px;
+             border-radius: 12px;
+             border-left: 4px solid #ffc107;
+             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+         }
+
+         .annual-message p {
+             font-size: 16px;
+             line-height: 1.6;
+             color: #333;
+             margin: 0;
+             font-style: italic;
+         }
+
+         .summary-placeholder {
+             text-align: center;
+             padding: 60px 20px;
+             color: #999;
+         }
+
+         .summary-placeholder h4 {
+             margin-bottom: 15px;
+             color: #666;
+         }
+
+         @media (max-width: 768px) {
+             .annual-summary-report {
+                 margin: 10px;
+                 padding: 15px;
+             }
+
+             .summary-header {
+                 padding: 20px 15px;
+             }
+
+             .summary-header h3 {
+                 font-size: 24px;
+             }
+
+             .summary-section {
+                 padding: 20px 15px;
+             }
+
+             .stats-grid {
+                 grid-template-columns: repeat(2, 1fr);
+             }
+
+             .achievements-grid {
+                 grid-template-columns: 1fr;
+             }
+
+             .milestone {
+                 flex-direction: column;
+                 align-items: stretch;
+             }
+
+             .milestone-date {
+                 margin-right: 0;
+                 margin-bottom: 10px;
+                 align-self: flex-start;
+             }
+         }
     </style>
 </head>
 <body>
@@ -1780,6 +2049,7 @@
                 <button class="nav-item" onclick="showModule('emotion')">😊 情绪状态</button>
                 <button class="nav-item" onclick="showModule('timeline')">📸 图片时间轴</button>
                 <button class="nav-item" onclick="showModule('dashboard')">📊 数据面板</button>
+                <button class="nav-item" onclick="showModule('annual-summary')">🎊 年度总结</button>
             </div>
             
             <div class="content-area">
@@ -2337,6 +2607,30 @@
                             <button class="export-btn" onclick="exportAsData()">📄 导出数据</button>
                             <button class="export-btn" onclick="generateQRCode()">📱 生成二维码</button>
                             <button class="export-btn" onclick="clearAllData()">🗑️ 清空数据</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 年度总结模块 -->
+                <div id="annual-summary" class="module">
+                    <h2>🎊 年度总结</h2>
+                    
+                    <!-- 年度总结控制面板 -->
+                    <div class="annual-controls">
+                        <div class="year-selector">
+                            <label>📅 选择年份：</label>
+                            <select id="summaryYear" class="form-control" onchange="generateAnnualSummary()">
+                                <!-- 年份选项将动态生成 -->
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="generateAnnualSummary()">🎯 生成年度总结</button>
+                        <button class="btn-secondary" onclick="exportAnnualSummary()">📸 导出总结</button>
+                    </div>
+
+                    <!-- 年度总结内容 -->
+                    <div id="annualSummaryContent" class="annual-summary-content">
+                        <div class="summary-placeholder">
+                            <p>🎊 选择年份并点击"生成年度总结"来查看你的成长轨迹</p>
                         </div>
                     </div>
                 </div>
@@ -3162,22 +3456,23 @@
 
         // 导出为图片
         async function exportAsImage() {
+            // 创建包含图片的完整导出内容
+            const exportContent = document.createElement('div');
+            
             try {
                 console.log('开始导出图片...');
                 alert('正在生成图片，请稍候...');
                 
                 const dashboard = document.getElementById('dashboard');
                 console.log('Dashboard元素:', dashboard);
-                
-                // 创建包含图片的完整导出内容
-                const exportContent = document.createElement('div');
                 exportContent.style.cssText = `
                     background: white;
-                    padding: 40px; /* 增加内边距 */
+                    padding: 30px;
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    max-width: 1000px; /* 增加最大宽度 */
+                    width: 800px; /* 固定宽度，避免过宽 */
                     margin: 0 auto;
                     box-sizing: border-box;
+                    min-height: auto; /* 让高度自适应内容 */
                 `;
             
             // 添加标题
@@ -3186,8 +3481,8 @@
             title.style.cssText = `
                 text-align: center;
                 color: #333;
-                margin-bottom: 30px;
-                font-size: 32px; /* 增加标题字体大小 */
+                margin-bottom: 20px;
+                font-size: 24px; /* 适中的标题字体大小 */
                 font-weight: bold;
             `;
             exportContent.appendChild(title);
@@ -3198,8 +3493,8 @@
             dateDiv.style.cssText = `
                 text-align: center;
                 color: #666;
-                margin-bottom: 30px;
-                font-size: 16px; /* 增加日期字体大小 */
+                margin-bottom: 25px;
+                font-size: 14px; /* 适中的日期字体大小 */
                 font-weight: 500;
             `;
             exportContent.appendChild(dateDiv);
@@ -3226,18 +3521,18 @@
                 if (Object.keys(moduleImages).length > 0) {
                     const moduleSection = document.createElement('div');
                     moduleSection.style.cssText = `
-                        margin-top: 30px;
-                        padding: 20px;
+                        margin-top: 20px;
+                        padding: 15px;
                         border: 1px solid #e0e0e0;
-                        border-radius: 10px;
+                        border-radius: 8px;
                     `;
                     
                     const moduleTitle = document.createElement('h3');
                     moduleTitle.textContent = moduleNames[module] + ' - 相关图片';
                     moduleTitle.style.cssText = `
                         color: #333;
-                        margin-bottom: 15px;
-                        font-size: 20px; /* 增加模块标题字体大小 */
+                        margin-bottom: 12px;
+                        font-size: 16px; /* 适中的模块标题字体大小 */
                         font-weight: bold;
                     `;
                     moduleSection.appendChild(moduleTitle);
@@ -3245,9 +3540,9 @@
                     const imageGrid = document.createElement('div');
                     imageGrid.style.cssText = `
                         display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 进一步增加最小宽度 */
-                        gap: 25px; /* 增加间距 */
-                        margin-top: 20px;
+                        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 适中的图片宽度 */
+                        gap: 15px; /* 适中的间距 */
+                        margin-top: 15px;
                     `;
                     
                     Object.values(moduleImages).forEach(imageData => {
@@ -3260,10 +3555,10 @@
                         img.src = imageData.url;
                         img.style.cssText = `
                             max-width: 100%;
-                            height: 250px; /* 进一步增加图片高度 */
+                            height: 150px; /* 适中的图片高度 */
                             object-fit: cover;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 增强阴影效果 */
+                            border-radius: 6px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 适中的阴影效果 */
                         `;
                         // 确保图片加载
                         img.crossOrigin = 'anonymous';
@@ -3271,10 +3566,10 @@
                         const imgName = document.createElement('div');
                         imgName.textContent = imageData.name;
                         imgName.style.cssText = `
-                            font-size: 14px; /* 增加字体大小 */
-                            color: #333; /* 加深颜色 */
-                            margin-top: 8px;
-                            font-weight: 500; /* 增加字体粗细 */
+                            font-size: 12px; /* 适中的字体大小 */
+                            color: #333;
+                            margin-top: 6px;
+                            font-weight: 500;
                         `;
                         
                         imgContainer.appendChild(img);
@@ -3308,7 +3603,7 @@
             
             const canvas = await html2canvas(exportContent, {
                 backgroundColor: '#ffffff',
-                scale: 4, // 进一步提高分辨率
+                scale: 2, // 降低scale值，避免图片过大导致质量问题
                 useCORS: true,
                 allowTaint: false,
                 foreignObjectRendering: false,
@@ -4766,8 +5061,476 @@
                 setTimeout(() => {
                     loadImageStats();
                 }, 100);
+            } else if (module === 'annual-summary') {
+                setTimeout(() => {
+                    initAnnualSummary();
+                }, 100);
             }
         };
+
+        // ==================== 年度总结功能 ====================
+        
+        // 初始化年度总结
+        function initAnnualSummary() {
+            populateYearSelector();
+            
+            // 检查是否是12月31日，自动生成年度总结
+            const today = new Date();
+            if (today.getMonth() === 11 && today.getDate() === 31) {
+                showAnnualSummaryNotification();
+            }
+        }
+
+        // 填充年份选择器
+        function populateYearSelector() {
+            const yearSelect = document.getElementById('summaryYear');
+            if (!yearSelect) return;
+
+            const currentYear = new Date().getFullYear();
+            const availableYears = getAvailableYears();
+            
+            yearSelect.innerHTML = '<option value="">请选择年份</option>';
+            
+            availableYears.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '年';
+                if (year === currentYear) {
+                    option.selected = true;
+                }
+                yearSelect.appendChild(option);
+            });
+        }
+
+        // 获取有数据的年份
+        function getAvailableYears() {
+            const years = new Set();
+            
+            // 遍历所有数据，提取年份
+            Object.values(growthData).forEach(dataArray => {
+                if (Array.isArray(dataArray)) {
+                    dataArray.forEach(item => {
+                        if (item.timestamp || item.date) {
+                            const date = new Date(item.timestamp || item.date);
+                            if (!isNaN(date.getTime())) {
+                                years.add(date.getFullYear());
+                            }
+                        }
+                    });
+                }
+            });
+
+            return Array.from(years).sort((a, b) => b - a);
+        }
+
+        // 生成年度总结
+        function generateAnnualSummary() {
+            const selectedYear = document.getElementById('summaryYear').value;
+            if (!selectedYear) {
+                alert('请先选择年份');
+                return;
+            }
+
+            const yearData = getYearData(parseInt(selectedYear));
+            const summaryContent = createAnnualSummaryContent(yearData, selectedYear);
+            
+            document.getElementById('annualSummaryContent').innerHTML = summaryContent;
+        }
+
+        // 获取指定年份的数据
+        function getYearData(year) {
+            const yearData = {
+                plans: [],
+                exercises: [],
+                studies: [],
+                readings: [],
+                emotions: []
+            };
+
+            Object.keys(growthData).forEach(key => {
+                if (Array.isArray(growthData[key])) {
+                    yearData[key] = growthData[key].filter(item => {
+                        const date = new Date(item.timestamp || item.date);
+                        return date.getFullYear() === year;
+                    });
+                }
+            });
+
+            return yearData;
+        }
+
+        // 创建年度总结内容
+        function createAnnualSummaryContent(yearData, year) {
+            const keywords = analyzeKeywords(yearData);
+            const statistics = calculateYearStatistics(yearData);
+            const achievements = analyzeAchievements(yearData);
+            const growth = analyzeGrowthTrajectory(yearData);
+
+            return `
+                <div class="annual-summary-report">
+                    <div class="summary-header">
+                        <h3>🎊 ${year}年度成长总结</h3>
+                        <p class="summary-subtitle">回顾这一年的成长足迹，见证每一份努力与收获</p>
+                    </div>
+
+                    <!-- 关键词云 -->
+                    <div class="summary-section">
+                        <h4>🔥 年度关键词</h4>
+                        <div class="keywords-cloud">
+                            ${keywords.map(kw => `
+                                <span class="keyword-tag" style="font-size: ${Math.min(24, 12 + kw.count * 2)}px">
+                                    ${kw.word} (${kw.count})
+                                </span>
+                            `).join('')}
+                        </div>
+                        <p class="keywords-insight">这些词汇最能代表你${year}年的成长主题</p>
+                    </div>
+
+                    <!-- 数据统计 -->
+                    <div class="summary-section">
+                        <h4>📊 年度数据一览</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">${statistics.totalDays}</div>
+                                <div class="stat-label">记录天数</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${statistics.exerciseHours}h</div>
+                                <div class="stat-label">运动时长</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${statistics.studyHours}h</div>
+                                <div class="stat-label">学习时长</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${statistics.readingHours}h</div>
+                                <div class="stat-label">阅读时长</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${statistics.booksRead}</div>
+                                <div class="stat-label">阅读书籍</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${statistics.avgEmotion.toFixed(1)}</div>
+                                <div class="stat-label">平均情绪分</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 成长轨迹 -->
+                    <div class="summary-section">
+                        <h4>📈 成长轨迹</h4>
+                        <div class="growth-timeline">
+                            ${growth.map(milestone => `
+                                <div class="milestone">
+                                    <div class="milestone-date">${milestone.month}月</div>
+                                    <div class="milestone-content">
+                                        <h5>${milestone.title}</h5>
+                                        <p>${milestone.description}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 成就解锁 -->
+                    <div class="summary-section">
+                        <h4>🏆 成就解锁</h4>
+                        <div class="achievements-grid">
+                            ${achievements.map(achievement => `
+                                <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                                    <div class="achievement-icon">${achievement.icon}</div>
+                                    <div class="achievement-title">${achievement.title}</div>
+                                    <div class="achievement-desc">${achievement.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 年度寄语 -->
+                    <div class="summary-section">
+                        <h4>💌 年度寄语</h4>
+                        <div class="annual-message">
+                            <p>${generateAnnualMessage(statistics, year)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 关键词分析
+        function analyzeKeywords(yearData) {
+            const wordCount = {};
+            const stopWords = new Set(['的', '了', '在', '是', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很', '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这', '那', '里', '就是', '还', '把', '比', '或者']);
+
+            // 提取所有文本内容
+            const allTexts = [];
+            
+            Object.values(yearData).forEach(dataArray => {
+                dataArray.forEach(item => {
+                    // 提取各种文本字段
+                    const textFields = ['goals', 'plan', 'content', 'subject', 'type', 'book', 'author', 'notes', 'trigger', 'regulation', 'description'];
+                    textFields.forEach(field => {
+                        if (item[field] && typeof item[field] === 'string') {
+                            allTexts.push(item[field]);
+                        }
+                    });
+                    
+                    // 处理学习记录的多主题结构
+                    if (item.topics && Array.isArray(item.topics)) {
+                        item.topics.forEach(topic => {
+                            if (topic.subject) allTexts.push(topic.subject);
+                            if (topic.content) allTexts.push(topic.content);
+                        });
+                    }
+                });
+            });
+
+            // 分词并统计
+            allTexts.forEach(text => {
+                // 简单的中文分词（按标点符号和空格分割）
+                const words = text.match(/[\u4e00-\u9fa5]+/g) || [];
+                words.forEach(word => {
+                    if (word.length >= 2 && !stopWords.has(word)) {
+                        wordCount[word] = (wordCount[word] || 0) + 1;
+                    }
+                });
+            });
+
+            // 返回前20个高频词
+            return Object.entries(wordCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 20)
+                .map(([word, count]) => ({ word, count }));
+        }
+
+        // 计算年度统计
+        function calculateYearStatistics(yearData) {
+            const stats = {
+                totalDays: 0,
+                exerciseHours: 0,
+                studyHours: 0,
+                readingHours: 0,
+                booksRead: 0,
+                avgEmotion: 0
+            };
+
+            // 计算记录天数
+            const allDates = new Set();
+            Object.values(yearData).forEach(dataArray => {
+                dataArray.forEach(item => {
+                    const date = new Date(item.timestamp || item.date);
+                    allDates.add(date.toDateString());
+                });
+            });
+            stats.totalDays = allDates.size;
+
+            // 运动时长
+            stats.exerciseHours = Math.round(yearData.exercises.reduce((sum, ex) => sum + (ex.duration || 0), 0) / 60);
+
+            // 学习时长
+            stats.studyHours = Math.round(yearData.studies.reduce((sum, study) => {
+                if (study.topics && Array.isArray(study.topics)) {
+                    return sum + (study.totalDuration || 0);
+                }
+                return sum + (study.duration || 0);
+            }, 0) / 60);
+
+            // 阅读时长和书籍数
+            const uniqueBooks = new Set();
+            stats.readingHours = Math.round(yearData.readings.reduce((sum, reading) => {
+                if (reading.book) uniqueBooks.add(reading.book);
+                const match = (reading.progress || '').match(/(\d+)分钟/);
+                return sum + (match ? parseInt(match[1]) : 0);
+            }, 0) / 60);
+            stats.booksRead = uniqueBooks.size;
+
+            // 平均情绪分
+            if (yearData.emotions.length > 0) {
+                stats.avgEmotion = yearData.emotions.reduce((sum, emotion) => sum + (emotion.intensity || 0), 0) / yearData.emotions.length;
+            }
+
+            return stats;
+        }
+
+        // 分析成就
+        function analyzeAchievements(yearData) {
+            const achievements = [
+                {
+                    icon: '🏃‍♂️',
+                    title: '运动达人',
+                    description: '累计运动超过100小时',
+                    unlocked: yearData.exercises.reduce((sum, ex) => sum + (ex.duration || 0), 0) >= 6000
+                },
+                {
+                    icon: '📚',
+                    title: '学习之星',
+                    description: '累计学习超过200小时',
+                    unlocked: yearData.studies.reduce((sum, study) => {
+                        if (study.topics && Array.isArray(study.topics)) {
+                            return sum + (study.totalDuration || 0);
+                        }
+                        return sum + (study.duration || 0);
+                    }, 0) >= 12000
+                },
+                {
+                    icon: '📖',
+                    title: '阅读爱好者',
+                    description: '阅读超过20本书',
+                    unlocked: new Set(yearData.readings.map(r => r.book).filter(Boolean)).size >= 20
+                },
+                {
+                    icon: '😊',
+                    title: '情绪管理师',
+                    description: '平均情绪分超过7分',
+                    unlocked: yearData.emotions.length > 0 && 
+                             yearData.emotions.reduce((sum, e) => sum + (e.intensity || 0), 0) / yearData.emotions.length >= 7
+                },
+                {
+                    icon: '📅',
+                    title: '坚持不懈',
+                    description: '连续记录超过100天',
+                    unlocked: new Set(Object.values(yearData).flat().map(item => {
+                        const date = new Date(item.timestamp || item.date);
+                        return date.toDateString();
+                    })).size >= 100
+                },
+                {
+                    icon: '🎯',
+                    title: '目标达成者',
+                    description: '完成超过80%的计划',
+                    unlocked: yearData.plans.length > 0 && 
+                             yearData.plans.filter(p => p.completed).length / yearData.plans.length >= 0.8
+                }
+            ];
+
+            return achievements;
+        }
+
+        // 分析成长轨迹
+        function analyzeGrowthTrajectory(yearData) {
+            const monthlyData = {};
+            
+            // 按月份组织数据
+            Object.values(yearData).forEach(dataArray => {
+                dataArray.forEach(item => {
+                    const date = new Date(item.timestamp || item.date);
+                    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    
+                    if (!monthlyData[monthKey]) {
+                        monthlyData[monthKey] = {
+                            plans: 0,
+                            exercises: 0,
+                            studies: 0,
+                            readings: 0,
+                            emotions: 0
+                        };
+                    }
+                    
+                    // 根据数据类型增加计数
+                    if (yearData.plans.includes(item)) monthlyData[monthKey].plans++;
+                    if (yearData.exercises.includes(item)) monthlyData[monthKey].exercises++;
+                    if (yearData.studies.includes(item)) monthlyData[monthKey].studies++;
+                    if (yearData.readings.includes(item)) monthlyData[monthKey].readings++;
+                    if (yearData.emotions.includes(item)) monthlyData[monthKey].emotions++;
+                });
+            });
+
+            // 生成成长里程碑
+            const milestones = [];
+            const sortedMonths = Object.keys(monthlyData).sort();
+            
+            sortedMonths.forEach((monthKey, index) => {
+                const [year, month] = monthKey.split('-');
+                const data = monthlyData[monthKey];
+                const total = Object.values(data).reduce((sum, count) => sum + count, 0);
+                
+                if (total > 0) {
+                    let title = '';
+                    let description = '';
+                    
+                    if (index === 0) {
+                        title = '开启成长之旅';
+                        description = `开始记录成长轨迹，本月共记录${total}条数据`;
+                    } else if (index === sortedMonths.length - 1) {
+                        title = '持续精进';
+                        description = `坚持到年末，本月记录${total}条数据`;
+                    } else {
+                        const maxType = Object.entries(data).reduce((max, [type, count]) => 
+                            count > max.count ? { type, count } : max, { type: '', count: 0 });
+                        
+                        const typeNames = {
+                            plans: '计划制定',
+                            exercises: '运动健身',
+                            studies: '学习充电',
+                            readings: '阅读思考',
+                            emotions: '情绪管理'
+                        };
+                        
+                        title = `专注${typeNames[maxType.type]}`;
+                        description = `本月在${typeNames[maxType.type]}方面表现突出，记录${maxType.count}次`;
+                    }
+                    
+                    milestones.push({
+                        month: parseInt(month),
+                        title,
+                        description
+                    });
+                }
+            });
+
+            return milestones.slice(0, 6); // 最多显示6个里程碑
+        }
+
+        // 生成年度寄语
+        function generateAnnualMessage(statistics, year) {
+            const messages = [
+                `${year}年，你用${statistics.totalDays}天的坚持，书写了属于自己的成长故事。`,
+                `在过去的一年里，你在运动中挥洒了${statistics.exerciseHours}小时的汗水，在学习中投入了${statistics.studyHours}小时的专注。`,
+                `${statistics.booksRead}本书籍为你打开了新的世界，每一页都是成长的见证。`,
+                `愿你在新的一年里，继续保持这份对成长的热爱与坚持，让每一天都成为更好的自己。`,
+                `记住，成长不是一蹴而就的，而是在每一个平凡的日子里，一点一滴的积累。`
+            ];
+
+            return messages.join(' ');
+        }
+
+        // 显示年度总结通知
+        function showAnnualSummaryNotification() {
+            if (confirm('🎊 今天是12月31日！要不要生成你的年度总结，回顾这一年的成长轨迹？')) {
+                showModule('annual-summary');
+                setTimeout(() => {
+                    const currentYear = new Date().getFullYear();
+                    document.getElementById('summaryYear').value = currentYear;
+                    generateAnnualSummary();
+                }, 500);
+            }
+        }
+
+        // 导出年度总结
+        function exportAnnualSummary() {
+            const summaryContent = document.getElementById('annualSummaryContent');
+            if (!summaryContent || summaryContent.querySelector('.summary-placeholder')) {
+                alert('请先生成年度总结');
+                return;
+            }
+
+            // 使用html2canvas导出
+            html2canvas(summaryContent, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                useCORS: true,
+                allowTaint: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `年度总结_${document.getElementById('summaryYear').value}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            }).catch(error => {
+                console.error('导出失败:', error);
+                alert('导出失败，请重试');
+            });
+        }
     </script>
 </body>
 </html>
