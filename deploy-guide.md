@@ -136,7 +136,7 @@ php -S localhost:8000
 ### 5. 获取访问链接
 - 几分钟后，你的网站将在以下地址可用：
 - `https://你的用户名.github.io/仓库名称`
-- 例如：`https://zhangsan.github.io/growth-dashboard`
+- 例如：`https://helloworld811.github.io/growth-dashboard`
 
 ## 📱 二维码生成
 
@@ -209,7 +209,7 @@ GitHub Pages提供基本的访问统计：
 📊 五大模块全覆盖：计划、运动、学习、阅读、情绪
 🎊 新增年度总结功能：智能关键词分析、成就系统、成长轨迹
 📱 手机电脑都能用，数据可视化超直观
-🔗 在线体验：https://你的用户名.github.io/growth-dashboard
+🔗 在线体验：https://helloworld811.github.io/growth-dashboard
 #个人成长 #自我管理 #数据可视化 #年度总结
 ```
 
